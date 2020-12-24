@@ -28,3 +28,5 @@ When updating, ID must be included and ID must exist in the array.
 When managing ingredients, we must provide ID
 
 -Since the DELETE call is missing from the code, I will have to add it
+-I will assume that managing ingredients can be done with a simple update, therefore, we need to get the existing recipe, update ingredients and update recipe too.
+
