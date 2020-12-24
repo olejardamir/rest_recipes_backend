@@ -29,4 +29,4 @@ When managing ingredients, we must provide ID
 
 -Since the DELETE call is missing from the code, I will have to add it
 -I will assume that managing ingredients can be done with a simple update, therefore, we need to get the existing recipe, update ingredients and update recipe too.
-
+-Since the code task is too simple, then it is most likely that ingredients is array or list, this means that we need to add a separate file/logic for managing ingredients that will be placed into the array or a list. For simplicity, I will go with the array.
