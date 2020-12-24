@@ -26,7 +26,7 @@ var pivot = 0;
 
 function verifyRecipe(postBody){
     var id = postBody.id;
-    if ( verifyRecipeNoId(postBody) && typeof id !== 'undefined'){
+    if ( verifyRecipeNoId(postBody) && typeof id !== 'undefined' && id<=pivot){
         return true;
     }
     return false;
@@ -43,6 +43,45 @@ function verifyRecipeNoId(postBody){
         return true;
     }
         return false;
+}
+
+/*
+0 - bad request
+1 - update all
+2 - search/replace
+3 - add new
+*/
+function verifyManageIngredients(postBody){
+   var updateAll = postBody.updateAll;
+   var searchFor = postBody.searchFor;
+   var replaceWith = postBody.replaceWith;
+   var addIngredient = postBody.addIngredient;
+
+    if(typeof updateAll !== 'undefined' &&
+        typeof searchFor == 'undefined' &&
+        typeof replaceWith == 'undefined' &&
+        typeof addIngredient == 'undefined'
+    ){
+        return 1;
+    }
+
+    if(typeof updateAll == 'undefined' &&
+        typeof searchFor !== 'undefined' &&
+        typeof replaceWith !== 'undefined' &&
+        typeof addIngredient == 'undefined'
+    ){
+        return 2;
+    }
+
+    if(typeof updateAll == 'undefined' &&
+        typeof searchFor == 'undefined' &&
+        typeof replaceWith == 'undefined' &&
+        typeof addIngredient !== 'undefined'
+    ){
+        return 3;
+    }
+
+    return 0;
 }
 
 //--------------------LIST RECIPES-------------------------------------
@@ -151,7 +190,64 @@ exports.updateRecipe = function (req,res){
 
 //--------------------MANAGE INGREDIENTS-------------------------------------
 //POST
-exports.manageIngredients = function (req,ser){}
+exports.manageIngredients = function (req,res){
+    body = '';
+
+    req.on('data', function (chunk) {
+        body += chunk;
+    });
+
+    req.on('end', function () {
+        postBody = JSON.parse(body);
+        var recipeId = postBody.id;
+        var callType = verifyManageIngredients(postBody);
+
+        if(typeof recipeId!==undefined && recipeId<=pivot) {
+            var id = postBody.id;
+            var recipe = cookbook[id];
+            var recipeBody = JSON.parse(recipe);
+
+            if (callType == 1) {
+                //updateAll
+                recipeBody.ingredients = postBody.updateAll;
+                cookbook[id] = JSON.stringify(recipeBody);
+                var response = {
+                    "Response": "Updated ingredients array"
+                };
+                OKResponse(res, response);
+            } else if (callType == 2) {
+                var replaceArr = recipeBody.ingredients;
+                for(i=0;i<replaceArr.length;i++){
+                    if(replaceArr[i]==postBody.searchFor){
+                        replaceArr[i] = postBody.replaceWith;
+                        break;
+                    }
+                }
+                recipeBody.ingredients = replaceArr;
+                cookbook[id] = JSON.stringify(recipeBody);
+                var response = {
+                    "Response": "If existing, replaced '"+postBody.searchFor+"' with '"+postBody.replaceWith+"' "
+                };
+                OKResponse(res, response);
+            } else if (callType == 3) {
+                //addIngredient
+                recipeBody.ingredients[recipeBody.ingredients.length] = postBody.addIngredient;
+                cookbook[id] = JSON.stringify(recipeBody);
+                var response = {
+                    "Response": "Added new ingredient: "
+                };
+                OKResponse(res, response);
+            }
+        }
+        else {
+            var response = {
+                "Response": "Bad ingredients management"
+            };
+            badRequest(res, response);
+        }
+    });
+
+}
 
 //----------------------------------------------------------------------------
 
@@ -161,6 +257,19 @@ function cleanCookBook(){
     for(i=0;i<pivot;i++){
         if(cookbook[i]!=null){
             ret[c] = cookbook[i];
+            ret[c].ingredients = cleanIngredients(ret[c]);
+            c++;
+        }
+    }
+    return ret;
+}
+
+function cleanIngredients(ingredients){
+    var ret=[];
+    var c=0;
+    for(i=0;i<ingredients.length;i++){
+        if(ingredients[i]!=null){
+            ret[c] = ingredients[i];
             c++;
         }
     }
