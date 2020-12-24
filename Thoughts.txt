@@ -1,3 +1,5 @@
 
 - Since we are asked to make a RESTful API without using the third party frameworks, we will most-likely find an initial solution using GitHub and shorten time
 - A few examples are found, and we need to test them first.
+- The one that works and has least code is: https://github.com/aditya-sridhar/simple-rest-apis-nodejs-without-frameworks
+- First, we need to see if the code needs any cleanup, and upload everything to this repository.
