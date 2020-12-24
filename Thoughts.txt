@@ -30,3 +30,30 @@ When managing ingredients, we must provide ID
 -Since the DELETE call is missing from the code, I will have to add it
 -I will assume that managing ingredients can be done with a simple update, therefore, we need to get the existing recipe, update ingredients and update recipe too.
 -Since the code task is too simple, then it is most likely that ingredients is array or list, this means that we need to add a separate file/logic for managing ingredients that will be placed into the array or a list. For simplicity, I will go with the array.
+
+
+Managing the ingredients has the following logic:
+-All is done by updates
+-Remove is just an update by null
+-All ingredients are listed in array
+-The update of a single ingredient is done by needle/haystack search
+-The same POST request can have multiple JSON inputs
+
+Request 1.
+{
+"updateAll":["potato","tomato",null]
+}
+- null is allowed
+
+Request 2.
+{
+"searchFor":"oldIngredient"
+"replaceWith":"newIngredient"
+}
+- null is allowed
+
+Request 3.
+{
+"addIngredient":"someIngredient"
+}
+-null or empty is not allowed
