@@ -57,3 +57,6 @@ Request 3.
 "addIngredient":"someIngredient"
 }
 -null or empty is not allowed
+
+
+All done: now documenting the test-cases.
