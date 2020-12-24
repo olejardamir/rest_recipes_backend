@@ -3,3 +3,28 @@
 - A few examples are found, and we need to test them first.
 - The one that works and has least code is: https://github.com/aditya-sridhar/simple-rest-apis-nodejs-without-frameworks
 - First, we need to see if the code needs any cleanup, and upload everything to this repository.
+
+- Now, we have to analyze what kind of calls we will make:
+GET: List all recipes
+POST: Add a new recipe
+DELETE: Remove a recipe
+POST: Update a recipe
+POST: Manage individual ingredients
+
+PUT is used to manage entire resource and will not be used for updating or adding
+
+- Now, we have to analyze the kind on an object we will be using
+The recipe object has:
+ID
+Name
+Instructions
+Ingredients
+
+Since we are not using any database, all will be kept in a bucket array
+
+- There are certain constraints we must include:
+When adding, we do not include an ID
+When updating, ID must be included and ID must exist in the array.
+When managing ingredients, we must provide ID
+
+-Since the DELETE call is missing from the code, I will have to add it
