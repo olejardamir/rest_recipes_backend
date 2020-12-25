@@ -44,3 +44,5 @@ In other window, simply execute the test-script
 ```bash
 node test.js
 ```
+
+To re-run the test, you have to reload the server and run the test.js again.
