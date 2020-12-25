@@ -41,3 +41,6 @@ node server.js
 ```
 
 In other window, simply execute the test-script
+```bash
+node test.js
+```
