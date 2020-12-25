@@ -1,4 +1,4 @@
-# The recipes REST API example, node.js, no frameworks
+# The recipes REST API assignment, Node.js, no frameworks
 The purpose of this assignment is to create the RESTful API for managing the recipes, without using a third party addons.
 
 The language of choice is Node.js
