@@ -187,7 +187,6 @@ exports.manageIngredients = function (req,res){
         }
         else {
             postBody = JSON.parse(body);
-            console.log(postBody);
 
             var id = postBody.id;
             var callType = verifyManageIngredients(postBody);

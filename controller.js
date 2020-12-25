@@ -39,24 +39,15 @@ module.exports = http.createServer((req, res) => {
         service.updateRecipe(req, res);
     }
 
-
-    // GET Endpoint
-   else if (reqUrl.pathname == '/sample' && req.method === 'GET') {
+    // POST Endpoint
+    else if (reqUrl.pathname == '/manageIngredients' && req.method === 'POST') {
         console.log('Request Type:' +
             req.method + ' Endpoint: ' +
             reqUrl.pathname);
+        service.manageIngredients(req, res);
+    }
 
-        service.sampleRequest(req, res);
-
-        // POST Endpoint
-    } else if (reqUrl.pathname == '/test' && req.method === 'POST') {
-        console.log('Request Type:' +
-            req.method + ' Endpoint: ' +
-            reqUrl.pathname);
-
-        service.testRequest(req, res);
-
-    } else {
+    else {
         console.log('Request Type:' +
             req.method + ' Invalid Endpoint: ' +
             reqUrl.pathname);
