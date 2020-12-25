@@ -8,7 +8,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aditya-sridhar/simple-rest-apis-nodejs-without-frameworks.git"
   },
   "keywords": [
     "rest",
@@ -16,7 +15,7 @@
     "node",
     "express"
   ],
-  "author": "Aditya Sridhar",
+  "author": "Damir Olejar",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/aditya-sridhar/simple-rest-apis-nodejs-without-frameworks/issues"
