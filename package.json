@@ -1,5 +1,5 @@
 {
-  "name": "simple-rest-apis-nodejs-without-express",
+  "name": "rest_recipes_backend",
   "version": "1.0.0",
   "description": "simple rest apis in nodejs without express",
   "main": "server.js",
