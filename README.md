@@ -1,8 +1,4 @@
-# Building REST apis with Nodejs without using any framework or external library
-
-This Repo is part of a blog.
-
-The link to the blog is [https://adityasridhar.com/posts/how-to-use-nodejs-without-frameworks-and-external-libraries](https://adityasridhar.com/posts/how-to-use-nodejs-without-frameworks-and-external-libraries)
+# The recipes REST API example, node.js, no frameworks
 
 ## Pre-requisite
 
@@ -14,7 +10,7 @@ Refer to [https://nodejs.org](https://nodejs.org) to install NodeJS
 This code can be cloned to your local using the command
 
 ```bash
-git clone https://github.com/aditya-sridhar/simple-rest-apis-nodejs-without-frameworks.git
+https://github.com/olejardamir/rest_recipes_backend.git
 ```
 
 ## Running the code
