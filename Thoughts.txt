@@ -58,5 +58,15 @@ Request 3.
 }
 -null or empty is not allowed
 
+--------------------------------------------
+Testing:
+For test-cases, it is better to use a third-party addon to make the REST calls. Otherwise, the code will get too ugly.
+-Test the irrelevant/bad calls
+-Test the null calls
+-Test the bad data calls
+-Test the add/remove/update/list
+-Test the ingredient management using the same approach as above
 
-All done: now documenting the test-cases.
+
+
+
