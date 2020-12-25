@@ -13,13 +13,6 @@ const url = require('url');
  */
 
 
-/*
-GET: List all recipes
-POST: Add a new recipe
-DELETE: Remove a recipe
-POST: Update a recipe
-POST: Manage individual ingredients
-*/
 
 var cookbook = []; //this is where we store recipes
 var pivot = 0;
@@ -45,6 +38,237 @@ function verifyRecipeNoId(postBody){
         return false;
 }
 
+//--------------------LIST RECIPES-------------------------------------
+//GET
+exports.listRecipes = function (req, res){
+    const reqUrl = url.parse(req.url, true);
+    OKResponse(res, cookbook);
+}
+
+//--------------------ADD RECIPE-------------------------------------
+//POST
+exports.addRecipe = function(req,res){
+    body = '';
+
+    req.on('data', function (chunk) {
+        body += chunk;
+    });
+
+    req.on('end', function () {
+        if(body==''){
+            var response = {
+                "Response": "Data not found"
+            };
+            badRequest(res,response);
+        }
+        else {
+            postBody = JSON.parse(body);
+            if (!verifyRecipeNoId(postBody)) {
+                var response = {
+                    "Response": "Incomplete recipe " + postBody.name
+                };
+                badRequest(res, response);
+            }
+            else if(!Array.isArray(postBody.ingredients)){
+                var response = {
+                    "Response": "Ingredients are not an array"
+                };
+                badRequest(res, response);
+            }
+            else {
+                postBody.id = pivot;
+                cookbook[pivot] = postBody;
+                pivot = pivot + 1;
+
+                var response = {
+                    "Response": "Added new recipe at id: " + (pivot - 1)
+                };
+                OKResponse(res, response);
+            }
+        }
+    });
+}
+
+//--------------------DELETE RECIPE-------------------------------------
+//DELETE
+exports.removeRecipe = function (req,res){
+    body = '';
+
+    req.on('data', function (chunk) {
+        body += chunk;
+    });
+
+    req.on('end', function () {
+        if(body==''){
+            var response = {
+                "Response": "Data not found"
+            };
+            badRequest(res,response);
+        }
+        else{
+        postBody = JSON.parse(body);
+        if( typeof cookbook[postBody.id] == 'undefined'){
+            var response = {
+                "Response": "Invalid recipe id:" + postBody.id
+            };
+            badRequest(res,response);
+        }
+        else {
+            var id = postBody.id;
+            cookbook[id] = undefined;
+            var response = {
+                "Response": "Removed recipe at id: "+id
+            };
+            OKResponse(res, response);
+        }
+        }
+    });
+
+
+}
+
+//--------------------UPDATE RECIPE-------------------------------------
+//POST
+exports.updateRecipe = function (req,res){
+    body = '';
+
+    req.on('data', function (chunk) {
+        body += chunk;
+    });
+
+    req.on('end', function () {
+        if(body==''){
+            var response = {
+                "Response": "Data not found"
+            };
+            badRequest(res,response);
+        }
+        else {
+            postBody = JSON.parse(body);
+
+            if (!verifyRecipe(postBody)) {
+                var response = {
+                    "Response": "Incomplete recipe " + postBody.name
+                };
+                badRequest(res, response);
+            } else if (typeof cookbook[postBody.id] == 'undefined') {
+                var response = {
+                    "Response": "Invalid recipe id:" + postBody.id
+                };
+                badRequest(res, response);
+            } else {
+                var id = postBody.id;
+                cookbook[id] = postBody;
+                var response = {
+                    "Response": "Updated recipe at id: " + id
+                };
+                OKResponse(res, response);
+            }
+        }
+    });
+
+
+}
+
+//--------------------MANAGE INGREDIENTS-------------------------------------
+//POST
+exports.manageIngredients = function (req,res){
+    body = '';
+
+    req.on('data', function (chunk) {
+        body += chunk;
+    });
+
+    req.on('end', function () {
+        if(body==''){
+            var response = {
+                "Response": "Data not found"
+            };
+            badRequest(res,response);
+        }
+        else {
+            postBody = JSON.parse(body);
+            console.log(postBody);
+
+            var id = postBody.id;
+            var callType = verifyManageIngredients(postBody);
+
+            if (typeof id !== undefined && id <= pivot) {
+                var recipeBody = cookbook[id];
+
+                if (callType == 1) {
+                    updateAll(recipeBody, id, res);
+                } else if (callType == 2) {
+                    searchAndReplace(recipeBody, res);
+                } else if (callType == 3) {
+                    addIngredient(recipeBody, res);
+                }
+            } else {
+                var response = {
+                    "Response": "Bad ingredients management"
+                };
+                badRequest(res, response);
+            }
+        }
+    });
+
+}
+
+function updateAll(recipeBody, id, res) {
+    try {
+        //updateAll
+        recipeBody.ingredients = postBody.updateAll;
+        cookbook[id] = recipeBody;
+        var response = {
+            "Response": "Updated ingredients array"
+        };
+        OKResponse(res, response);
+    } catch (e) {
+        var response = {
+            "Response": "Caught an error " + e
+        };
+        badRequest(res, response);
+    }
+}
+
+function searchAndReplace(recipeBody, res) {
+    try {
+        var replaceArr = recipeBody.ingredients;
+        for (i = 0; i < replaceArr.length; i++) {
+            if (replaceArr[i] == postBody.searchFor) {
+                replaceArr[i] = postBody.replaceWith;
+                break;
+            }
+        }
+        recipeBody.ingredients = replaceArr;
+        var response = {
+            "Response": "If existing, replaced '" + postBody.searchFor + "' with '" + postBody.replaceWith + "' "
+        };
+        OKResponse(res, response);
+    } catch (e) {
+        var response = {
+            "Response": "Caught an error " + e
+        };
+        badRequest(res, response);
+    }
+}
+
+function addIngredient(recipeBody, res) {
+    try {
+        //addIngredient
+        recipeBody.ingredients[recipeBody.ingredients.length] = postBody.addIngredient;
+        var response = {
+            "Response": "Added a new ingredient: "+postBody.addIngredient
+        };
+        OKResponse(res, response);
+    } catch (e) {
+        var response = {
+            "Response": "Caught an error " + e
+        };
+        badRequest(res, response);
+    }
+}
+
 /*
 0 - bad request
 1 - update all
@@ -52,10 +276,10 @@ function verifyRecipeNoId(postBody){
 3 - add new
 */
 function verifyManageIngredients(postBody){
-   var updateAll = postBody.updateAll;
-   var searchFor = postBody.searchFor;
-   var replaceWith = postBody.replaceWith;
-   var addIngredient = postBody.addIngredient;
+    var updateAll = postBody.updateAll;
+    var searchFor = postBody.searchFor;
+    var replaceWith = postBody.replaceWith;
+    var addIngredient = postBody.addIngredient;
 
     if(typeof updateAll !== 'undefined' &&
         typeof searchFor == 'undefined' &&
@@ -84,197 +308,8 @@ function verifyManageIngredients(postBody){
     return 0;
 }
 
-//--------------------LIST RECIPES-------------------------------------
-//GET
-exports.listRecipes = function (req, res){
-    const reqUrl = url.parse(req.url, true);
-    OKResponse(res, cleanCookBook());
-}
-
-//--------------------ADD RECIPE-------------------------------------
-//POST
-exports.addRecipe = function(req,res){
-    body = '';
-
-    req.on('data', function (chunk) {
-        body += chunk;
-    });
-
-    req.on('end', function () {
-        postBody = JSON.parse(body);
-        if(!verifyRecipeNoId(postBody)){
-            var response = {
-                "Response": "Incomplete recipe " + postBody.name
-            };
-            badRequest(res,response);
-        }
-        else {
-            postBody.id = pivot;
-            cookbook[pivot] = postBody;
-            pivot = pivot+1;
-
-            var response = {
-                "Response": "Added new recipe at id: "+(pivot-1)
-            };
-            OKResponse(res, response);
-        }
-    });
-}
-
-//--------------------DELETE RECIPE-------------------------------------
-//DELETE
-exports.removeRecipe = function (req,res){
-    body = '';
-
-    req.on('data', function (chunk) {
-        body += chunk;
-    });
-
-    req.on('end', function () {
-        postBody = JSON.parse(body);
-        if( typeof cookbook[postBody.id] == 'undefined'){
-            var response = {
-                "Response": "Invalid recipe id:" + postBody.id
-            };
-            badRequest(res,response);
-        }
-        else {
-            var id = postBody.id;
-            cookbook[id] = undefined;
-            var response = {
-                "Response": "Removed recipe at id: "+id
-            };
-            OKResponse(res, response);
-        }
-    });
-
-
-}
-
-//--------------------UPDATE RECIPE-------------------------------------
-//POST
-exports.updateRecipe = function (req,res){
-    body = '';
-
-    req.on('data', function (chunk) {
-        body += chunk;
-    });
-
-    req.on('end', function () {
-        postBody = JSON.parse(body);
-
-        if(!verifyRecipe(postBody)){
-            var response = {
-                "Response": "Incomplete recipe " + postBody.name
-            };
-            badRequest(res,response);
-        }
-        else if( typeof cookbook[postBody.id] == 'undefined'){
-            var response = {
-                "Response": "Invalid recipe id:" + postBody.id
-            };
-            badRequest(res,response);
-        }
-        else {
-            var id = postBody.id;
-            cookbook[id] = postBody;
-            var response = {
-                "Response": "Updated recipe at id: "+id
-            };
-            OKResponse(res, response);
-        }
-    });
-
-
-}
-
-//--------------------MANAGE INGREDIENTS-------------------------------------
-//POST
-exports.manageIngredients = function (req,res){
-    body = '';
-
-    req.on('data', function (chunk) {
-        body += chunk;
-    });
-
-    req.on('end', function () {
-        postBody = JSON.parse(body);
-        var recipeId = postBody.id;
-        var callType = verifyManageIngredients(postBody);
-
-        if(typeof recipeId!==undefined && recipeId<=pivot) {
-            var id = postBody.id;
-            var recipe = cookbook[id];
-            var recipeBody = JSON.parse(recipe);
-
-            if (callType == 1) {
-                //updateAll
-                recipeBody.ingredients = postBody.updateAll;
-                cookbook[id] = JSON.stringify(recipeBody);
-                var response = {
-                    "Response": "Updated ingredients array"
-                };
-                OKResponse(res, response);
-            } else if (callType == 2) {
-                var replaceArr = recipeBody.ingredients;
-                for(i=0;i<replaceArr.length;i++){
-                    if(replaceArr[i]==postBody.searchFor){
-                        replaceArr[i] = postBody.replaceWith;
-                        break;
-                    }
-                }
-                recipeBody.ingredients = replaceArr;
-                cookbook[id] = JSON.stringify(recipeBody);
-                var response = {
-                    "Response": "If existing, replaced '"+postBody.searchFor+"' with '"+postBody.replaceWith+"' "
-                };
-                OKResponse(res, response);
-            } else if (callType == 3) {
-                //addIngredient
-                recipeBody.ingredients[recipeBody.ingredients.length] = postBody.addIngredient;
-                cookbook[id] = JSON.stringify(recipeBody);
-                var response = {
-                    "Response": "Added new ingredient: "
-                };
-                OKResponse(res, response);
-            }
-        }
-        else {
-            var response = {
-                "Response": "Bad ingredients management"
-            };
-            badRequest(res, response);
-        }
-    });
-
-}
 
 //----------------------------------------------------------------------------
-
-function cleanCookBook(){
-    var ret = [];
-    var c = 0;
-    for(i=0;i<pivot;i++){
-        if(cookbook[i]!=null){
-            ret[c] = cookbook[i];
-            ret[c].ingredients = cleanIngredients(ret[c]);
-            c++;
-        }
-    }
-    return ret;
-}
-
-function cleanIngredients(ingredients){
-    var ret=[];
-    var c=0;
-    for(i=0;i<ingredients.length;i++){
-        if(ingredients[i]!=null){
-            ret[c] = ingredients[i];
-            c++;
-        }
-    }
-    return ret;
-}
 
 function OKResponse(res, response) {
     res.statusCode = 200;
