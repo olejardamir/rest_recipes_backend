@@ -2,12 +2,11 @@ const url = require('url');
 
 /*
  Recipe example:
-
  {
  "id": 0,
  "name": "Pizza",
- "instructions": "Blah, blah, blah",
- "ingredients": "1kg of something"
+ "instructions": "Bake it in the oven",
+ "ingredients": ["1kg of something","2kg of something else"]
  }
 
  */
