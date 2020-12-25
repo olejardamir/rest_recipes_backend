@@ -1,4 +1,9 @@
 # The recipes REST API example, node.js, no frameworks
+The purpose of this assignment is to create the RESTful API for managing the recipes, without using a third party addons.
+
+The language of choice is Node.js
+
+Furthermore, for testing purposes we are using the addon called Axios, since the restrictions apply to API and not testing. Also, it makes the code much cleaner and test-cases understandable.
 
 ## Pre-requisite
 
