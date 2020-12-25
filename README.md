@@ -27,3 +27,17 @@ The application can be started using the command
 ```bash
 node server.js
 ```
+## Testing the code
+
+Add Axios by executing:
+
+```bash
+npm install axios --save
+```
+
+You will need two separate console/terminal windows. In one, start the server by:
+```bash
+node server.js
+```
+
+In other window, simply execute the test-script
