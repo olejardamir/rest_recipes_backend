@@ -1,5 +1,6 @@
 # The recipes REST API assignment, Node.js, no frameworks
 The purpose of this assignment is to create the RESTful API for managing the recipes, without using a third party addons.
+To read the thought process behind this work, simply open the Thoughts.txt
 
 The language of choice is Node.js
 
@@ -28,6 +29,7 @@ The application can be started using the command
 node server.js
 ```
 ## Testing the code
+The best way to test is to use either curl or the postman and do it manually. However, the automated-test has been created too.
 
 Add Axios by executing:
 
@@ -46,3 +48,6 @@ node test.js
 ```
 
 To re-run the test, you have to reload the server and run the test.js again.
+
+## Design
+The database is a simple array. Usually with databases such as SQL the ID is always an increment and whenever we remove the data, it is usually done by switching a flag. Instead, we are simply setting an array element to a null. However, the update does not work since it does not recognize the ID (that is, null has no ID). Therefore it works just like the auto-increment, when implemented in a real database.  All access is O(1), since we are using the bucket approach where each ID is an array number. Nevertheless, we do not filter a display and do display nulls. This is done simply to have a better performance. Usually, this is filtered with the SQL call, but since we don't have such an option, we are leaving it as-is.
