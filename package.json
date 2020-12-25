@@ -12,13 +12,10 @@
   "keywords": [
     "rest",
     "apis",
-    "node",
-    "express"
+    "node"
   ],
   "author": "Damir Olejar",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/aditya-sridhar/simple-rest-apis-nodejs-without-frameworks/issues"
   },
-  "homepage": "https://github.com/aditya-sridhar/simple-rest-apis-nodejs-without-frameworks#readme"
 }
