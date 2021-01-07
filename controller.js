@@ -15,15 +15,15 @@ module.exports = http.createServer((req, res) => {
         service.listRecipes(req, res);
     }
 
-    // POST Endpoint
-   else if (reqUrl.pathname == '/addRecipe' && req.method === 'POST') {
+    // PUT Endpoint
+   else if (reqUrl.pathname == '/addRecipe' && req.method === 'PUT') {
     console.log('Request Type:' +
         req.method + ' Endpoint: ' +
         reqUrl.pathname);
         service.addRecipe(req, res);
   }
 
-    // POST Endpoint
+    // DELETE Endpoint
     else if (reqUrl.pathname == '/removeRecipe' && req.method === 'DELETE') {
         console.log('Request Type:' +
             req.method + ' Endpoint: ' +
