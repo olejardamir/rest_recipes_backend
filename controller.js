@@ -47,6 +47,23 @@ module.exports = http.createServer((req, res) => {
         service.manageIngredients(req, res);
     }
 
+    // PUT Endpoint
+    else if (reqUrl.pathname == '/manageIngredientsPut' && req.method === 'PUT') {
+        console.log('Request Type:' +
+            req.method + ' Endpoint: ' +
+            reqUrl.pathname);
+        service.manageIngredientsPut(req, res);
+    }
+
+    // PUT Endpoint
+    else if (reqUrl.pathname == '/manageIngredientsPatch' && req.method === 'PATCH') {
+        console.log('Request Type:' +
+            req.method + ' Endpoint: ' +
+            reqUrl.pathname);
+        service.manageIngredientsPatch(req, res);
+    }
+
+
     else {
         console.log('Request Type:' +
             req.method + ' Invalid Endpoint: ' +
