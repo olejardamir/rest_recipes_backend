@@ -55,7 +55,7 @@ module.exports = http.createServer((req, res) => {
         service.manageIngredientsPut(req, res);
     }
 
-    // PUT Endpoint
+    // PATCH Endpoint
     else if (reqUrl.pathname == '/manageIngredientsPatch' && req.method === 'PATCH') {
         console.log('Request Type:' +
             req.method + ' Endpoint: ' +
