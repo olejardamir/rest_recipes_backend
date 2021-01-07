@@ -23,7 +23,7 @@ async function main() {
 
 async function badData() {
     try {
-        await axios.post('http://127.0.0.1:3000/addRecipe', '{"bad":"data"}');
+        await axios.put('http://127.0.0.1:3000/addRecipe', '{"bad":"data"}');
     } catch (e) {
         var strE = '' + e;
         console.log("Bad-data test 1 pass: " + (strE == "Error: Request failed with status code 400"));
@@ -47,7 +47,7 @@ async function badData() {
         console.log("Bad-data test 4 pass: " + (strE == "Error: Request failed with status code 400"));
     }
     try {
-        await axios.post('http://127.0.0.1:3000/addRecipe', ' {\n' +
+        await axios.put('http://127.0.0.1:3000/addRecipe', ' {\n' +
             ' "id": 0,\n' +
             ' "name": "Pizza",\n' +
             ' "instructions": "Bake it in the oven",\n' +
@@ -62,7 +62,7 @@ async function badData() {
         await axios.delete('http://127.0.0.1:3000/removeRecipe', { data: { "bad":"data"  }});
     } catch (e) {
         var strE = '' + e;
-        console.log("Bad-data test 5 pass: " + (strE == "Error: Request failed with status code 400"));
+        console.log("Bad-data test 6 pass: " + (strE == "Error: Request failed with status code 400"));
     }
 
 }
@@ -92,21 +92,21 @@ async function nullTest() {
 
     //--------ADD
     try {
-        await axios.post('http://127.0.0.1:3000/addRecipe', '{}');
+        await axios.put('http://127.0.0.1:3000/addRecipe', '{}');
     } catch (e) {
         var strE = '' + e;
         console.log("Add-null test 1 pass: " + (strE == "Error: Request failed with status code 400"));
     }
 
     try {
-        await axios.post('http://127.0.0.1:3000/addRecipe', '');
+        await axios.put('http://127.0.0.1:3000/addRecipe', '');
     } catch (e) {
         var strE = '' + e;
         console.log("Add-null test 2 pass: " + (strE == "Error: Request failed with status code 400"));
     }
 
     try {
-        await axios.post('http://127.0.0.1:3000/addRecipe', null);
+        await axios.put('http://127.0.0.1:3000/addRecipe', null);
     } catch (e) {
         var strE = '' + e;
         console.log("Add-null test 3 pass: " + (strE == "Error: Request failed with status code 400"));
@@ -197,13 +197,13 @@ async function addRecipes() {
         " \"ingredients\": [\"5kg of something\",\"1kg of something else\"]\n" +
         " }";
 
-    await axios.post('http://127.0.0.1:3000/addRecipe', recipe1)
+    await axios.put('http://127.0.0.1:3000/addRecipe', recipe1)
         .then((x) => console.log("Add Recipe test 1 pass: "
             + (JSON.stringify(x.data).includes("Added new recipe at id: 0"))))
-        .then(() => axios.post('http://127.0.0.1:3000/addRecipe', recipe2)
+        .then(() => axios.put('http://127.0.0.1:3000/addRecipe', recipe2)
             .then((x) => console.log("Add Recipe test 2 pass: "
                 + (JSON.stringify(x.data).includes("Added new recipe at id: 1")))))
-        .then(() => axios.post('http://127.0.0.1:3000/addRecipe', recipe3)
+        .then(() => axios.put('http://127.0.0.1:3000/addRecipe', recipe3)
             .then((x) => console.log("Add Recipe test 3 pass: "
                 + (JSON.stringify(x.data).includes("Added new recipe at id: 2")))));
 }
@@ -251,11 +251,11 @@ async function manageRecipes() {
         .then((x) => console.log("Manage Recipe test 1 pass: "
             + (JSON.stringify(x.data).includes("Updated ingredients array"))));
 
-    await axios.post('http://127.0.0.1:3000/manageIngredients', addIngrConst)
+    await axios.put('http://127.0.0.1:3000/manageIngredientsPut', addIngrConst)
         .then((x) => console.log("Manage Recipe test 2 pass: "
             + (JSON.stringify(x.data).includes("Added a new ingredient: Potato"))));
 
-    await axios.post('http://127.0.0.1:3000/manageIngredients', searchReplConst)
+    await axios.patch('http://127.0.0.1:3000/manageIngredientsPatch', searchReplConst)
         .then((x) => console.log("Manage Recipe test 3 pass: "
             + (JSON.stringify(x.data).includes("replaced 'Potato' with 'Tomato'"))));
 }
