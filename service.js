@@ -45,7 +45,7 @@ exports.listRecipes = function (req, res){
 }
 
 //--------------------ADD RECIPE-------------------------------------
-//POST
+//PUT
 exports.addRecipe = function(req,res){
     body = '';
 
@@ -189,18 +189,11 @@ exports.manageIngredients = function (req,res){
             postBody = JSON.parse(body);
 
             var id = postBody.id;
-            var callType = verifyManageIngredients(postBody);
 
             if (typeof id !== undefined && id <= pivot) {
                 var recipeBody = cookbook[id];
-
-                if (callType == 1) {
                     updateAll(recipeBody, id, res);
-                } else if (callType == 2) {
-                    searchAndReplace(recipeBody, res);
-                } else if (callType == 3) {
-                    addIngredient(recipeBody, res);
-                }
+
             } else {
                 var response = {
                     "Response": "Bad ingredients management"
@@ -209,8 +202,79 @@ exports.manageIngredients = function (req,res){
             }
         }
     });
-
 }
+
+//PUT
+exports.manageIngredientsPut = function (req,res){
+    body = '';
+
+    req.on('data', function (chunk) {
+        body += chunk;
+    });
+
+    req.on('end', function () {
+        if(body==''){
+            var response = {
+                "Response": "Data not found"
+            };
+            badRequest(res,response);
+        }
+        else {
+            postBody = JSON.parse(body);
+
+            var id = postBody.id;
+
+            if (typeof id !== undefined && id <= pivot) {
+                var recipeBody = cookbook[id];
+                    addIngredient(recipeBody, res);
+            } else {
+                var response = {
+                    "Response": "Bad ingredients management"
+                };
+                badRequest(res, response);
+            }
+        }
+    });
+}
+
+//PATCH
+exports.manageIngredientsPatch = function (req,res){
+    body = '';
+
+    req.on('data', function (chunk) {
+        body += chunk;
+    });
+
+    req.on('end', function () {
+        if(body==''){
+            var response = {
+                "Response": "Data not found"
+            };
+            badRequest(res,response);
+        }
+        else {
+            postBody = JSON.parse(body);
+
+            var id = postBody.id;
+
+            if (typeof id !== undefined && id <= pivot) {
+                var recipeBody = cookbook[id];
+                    searchAndReplace(recipeBody, res);
+            } else {
+                var response = {
+                    "Response": "Bad ingredients management"
+                };
+                badRequest(res, response);
+            }
+        }
+    });
+}
+
+
+
+//--------------------MANAGE INGREDIENTS-------------------------------------
+
+
 
 function updateAll(recipeBody, id, res) {
     try {
